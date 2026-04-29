@@ -1,0 +1,1 @@
+# Izstrādes žurnāls
