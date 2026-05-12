@@ -1,0 +1,14 @@
+[
+    {
+        "date": "2026-05-12",
+        "amount": 2.5,
+        "category": "Transports",
+        "description": "Autobusa biļete"
+    },
+    {
+        "date": "2026-05-12",
+        "amount": 49.67,
+        "category": "Ēdiens",
+        "description": "Rimi pārtika"
+    }
+]
