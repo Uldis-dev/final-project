@@ -39,7 +39,7 @@ def get_available_months(expenses):
         months.add(month)
     
     # Sakārtojam hronoloģiskā secībā
-    return sorted(list(months))
+    return sorted(list(months), reverse=True)
 
 def filter_by_month(expenses, month_str):
     """
@@ -50,6 +50,20 @@ def filter_by_month(expenses, month_str):
         if expense["date"].startswith(month_str):
             filtered_expenses.append(expense)
     return filtered_expenses
+
+def delete_expense(expenses, index):
+    """
+    Izdzēš izdevumu no saraksta pēc norādītā indeksa.
+    Atgriež True, ja izdzēsts, un False, ja nē.
+    """
+    try:
+        if 0 <= index < len(expenses):
+            removed = expenses.pop(index)
+            print(f"Izdzēsts: {removed['description']} ({removed['amount']} EUR)")
+            return True
+        return False
+    except (IndexError, TypeError):
+        return False
 
 if __name__ == "__main__":
     # 1. Izveidojam testa datus (sarakstu ar vārdnīcām)
