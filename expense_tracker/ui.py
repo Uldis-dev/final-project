@@ -75,7 +75,7 @@ def get_new_expense(categories):
             # No numura (piem. 1) iegūstam nosaukumu (indekss 0)
             category_name = categories[category_nr_input - 1]
         else:
-            print("❌ Kļūda: Nepareizs kategorijas numurs!")
+            print("      ❌ Kļūda: Nepareizs kategorijas numurs!")
             return None
 
         amount = float(input("Summa (EUR): "))
@@ -88,21 +88,25 @@ def get_new_expense(categories):
             "description": description
         }
     except ValueError:
-        print("❌ Kļūda: Summai jābūt skaitlim!")
+        print("      ❌ Kļūda: Summai jābūt skaitlim!")
         return None
     
 
-def display_expenses(expenses):
+def display_expenses(expenses, filter_value=None):
     clear_screen()
     print("\n")
     print("=" * 70)
     print("  IZDEVUMU IZSEKOTĀJS")
     print("=" * 70)
-    print("    Izdevumu saraksts")
+    title = "    Izdevumu saraksts"
+    # 2. Ja filtrs ir norādīts, pievienojam to virsrakstam iekavās
+    if filter_value:
+        title += f" ({filter_value})"
+    print(f"{title}")
     print("─" * 70)
 
     if not expenses:
-        print("\nSaraksts ir tukšs!")
+        print("\n      ❌ Saraksts ir tukšs!")
         return
 
     print(f"\n{'Datums':<18} {'Summa':<8} {'Kategorija':<15} {'Apraksts':<33}")
@@ -136,7 +140,7 @@ def display_category_expenses(summary):
     print("─" * 70)
 
     if not summary:
-        print("\nNav datu kopsavilkuma izveidei.")
+        print("\n      ❌ Nav datu kopsavilkuma izveidei.")
         return
 
     print(f"\n{'Kategorija':<22} {'Summa':<10}")
@@ -153,3 +157,40 @@ def display_category_expenses(summary):
         
     print("─" * 31)
     print(f"  {'KOPĀ:':<14} {grand_total:>10.2f} EUR")
+
+
+def ask_month_selection(months):
+    """
+    Parāda pieejamos mēnešus un prasa lietotājam izvēlēties vienu.
+    Atgriež izvēlēto mēnesi (string) vai None.
+    """
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    print("    Filtrēt pēc mēneša")
+    print("─" * 70)
+    print("\n")
+
+
+    if not months:
+        print("\n     ❌ Nav pieejamu datu par mēnešiem.")
+        return None
+
+    print("      Pieejamie mēneši")
+    print("─" * 30)
+    
+    for index, month in enumerate(months, start=1):
+        print(f"{index}) {month}")
+
+    try:
+        choice = int(input(f"\nIzvēlieties numuru (1-{len(months)}): "))
+        if 1 <= choice <= len(months):
+            return months[choice - 1]
+        else:
+            print("      ❌ Kļūda: Skaitlis nav sarakstā.")
+            return None
+    except ValueError:
+        print("      ❌ Kļūda: Lūdzu, ievadiet veselu skaitli!")
+        return None    
