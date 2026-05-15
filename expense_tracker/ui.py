@@ -1,5 +1,45 @@
 from logic import sum_total
 from datetime import datetime
+import os
+
+def clear_screen():
+    """
+    Notīra termināla ekrānu atkarībā no operētājsistēmas.
+    """
+    # Windows sistēmā os.name ir 'nt', macOS/Linux tā ir 'posix'
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
+
+def wait_for_user():
+    """
+    Aptur programmas darbību, līdz lietotājs nospiež Enter.
+    """
+    print("\n" * 3)
+    print("─" * 70)
+    input("Nospiediet [Enter], lai atgrieztos izvēlnē...")        
+
+def show_menu():
+    """Parāda galveno izvēlni un atgriež lietotāja izvēli."""
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    print("    Galvenā izvēlne")      
+    print("─" * 70)
+
+
+    print("\n1) Pievienot izdevumu")
+    print("2) Parādīt izdevumus")
+    print("3) Filtrēt pēc mēneša")    
+    print("4) Kopsavilkums pa kategorijām")
+    print("5) Dzēst izdevumu")    
+    print("6) Eksportēt CSV")            
+    print("7) Iziet")
+
+    return input("\nIzvēlies darbību (1-7): ")
 
 def get_new_expense(categories):
     """
@@ -7,10 +47,18 @@ def get_new_expense(categories):
     """
     # 1. Iegūstam šodienas datumu kā tekstu pareizā formātā
     today_str = datetime.now().strftime("%Y-%m-%d")
+    
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    print("    Pievienot jaunu izdevumu")
+    print("─" * 70)
+    print("\n")
 
-    print("\n--- PIEVIENOT JAUNU IZDEVUMU ---")
     try:
-        date_input = input(f"Datums (YYYY-MM-DD) [{today_str}]: ")
+        date_input = input(f"Datums (YYYY-MM-DD), atstājot tukšu, tiks paņemts šodienas datums ({today_str}): ")
         if date_input == "":    #ja lietotājs neievada datumu, tiek paņemts šodienas datums
             date = today_str
         else:
@@ -27,7 +75,7 @@ def get_new_expense(categories):
             # No numura (piem. 1) iegūstam nosaukumu (indekss 0)
             category_name = categories[category_nr_input - 1]
         else:
-            print("Kļūda: Nepareizs kategorijas numurs!")
+            print("      ❌ Kļūda: Nepareizs kategorijas numurs!")
             return None
 
         amount = float(input("Summa (EUR): "))
@@ -40,28 +88,167 @@ def get_new_expense(categories):
             "description": description
         }
     except ValueError:
-        print("Kļūda: Summai jābūt skaitlim!")
+        print("      ❌ Kļūda: Summai jābūt skaitlim!")
         return None
     
 
-def display_expenses(expenses):
-    if not expenses:
-        print("\nSaraksts ir tukšs!")
-        return
+def display_expenses(expenses, filter_value=None, show_index=False):
+    """
+    Attēlo izdevumus. 
+    Ja ir iedots parametrs filter_value, tad tas tiek parādīts iekavās pie virsraksta
+    Ja show_index ir True, katras rindas sākumā parāda numuru.
+    """
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    title = "    Izdevumu saraksts"
+    # 2. Ja filtrs ir norādīts, pievienojam to virsrakstam iekavās
+    if filter_value:
+        title += f" ({filter_value})"
+    print(f"{title}")
+    print("─" * 70)
 
-    print(f"\n{'Datums':<12} {'Summa':>10} {'Kategorija':<15} {'Apraksts'}")
-    print("-" * 60)
+    if not expenses:
+        print("\n      ❌ Saraksts ir tukšs!")
+        return
     
-    for exp in expenses:
+    if show_index:
+        # Ja show_index ir True, izveidojam formatētu tekstu
+        # :<4 nozīmē, ka teksts aizņems 4 zīmju vietu, līdzināts pa kreisi
+        idx_header = f"{'Nr.':<4} "
+    else:
+        # Ja show_index ir False, mainīgais paliek tukšs
+        idx_header = ""
+
+    print(f"\n{idx_header}{'Datums':<18} {'Summa':<8} {'Kategorija':<20} {'Apraksts':<33}")
+    print("─" * 70)
+    
+    #for exp in expenses:
+    for i, exp in enumerate(expenses, start=1):    
         # Pievienojam EUR simbolu un noformatējam decimāldaļas
-        amount_str = f"{exp['amount']:>7.2f} EUR"
-        print(f"{exp['date']:<12} {amount_str} {exp['category']:<15} {exp['description']}")
+        amount_str = f"{exp['amount']:.2f}"
+
+        # Sagatavojam indeksa prefiksu ar iekavu
+        idx_prefix = "" 
+        if show_index:
+            # Izveidojam tekstu, piemēram, "1)"
+            index_with_bracket = f"{i})"
+            idx_prefix = f"{index_with_bracket:<4} "
+        else:
+            idx_prefix = ""
+
+        print(f"{idx_prefix}{exp['date']:<12} {amount_str:>10} EUR {exp['category']:<20} {exp['description']:<33}")
     
-    print("-" * 60)
+    print("─" * 70)
 
     # Šeit pievienojam kopsummas aprēķinu un izvadi
     total = sum_total(expenses)
     count = len(expenses)
     
-    print(f"Kopā: {total:>9.2f} EUR ({count} ieraksti)")
-    print("-" * 60)    
+    print(f"  {'KOPĀ:':<10} {total:>10.2f} EUR ({count} ieraksti)")
+    print("─" * 70)    
+
+
+def display_category_expenses(summary):
+    """
+    Attēlo kopsavilkumu pa kategorijām glītā formātā.
+    """
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    print("    Kopsavilkums pa kategorijām")
+    print("─" * 70)
+
+    if not summary:
+        print("\n      ❌ Nav datu kopsavilkuma izveidei.")
+        return
+
+    print(f"\n{'Kategorija':<27} {'Summa':<10}")
+    print("─" * 36)
+
+    grand_total = 0
+    
+    # Ejam cauri vārdnīcas elementiem (atslēga, vērtība)
+    for category, amount in summary.items():
+        # :<15 norāda, ka tekstam jāaizņem 15 zīmes, līdzinot pa kreisi
+        # :>10.2f norāda 10 zīmes, līdzinot pa labi, ar 2 cipariem aiz komata
+        print(f"{category:<21} {amount:>10.2f} EUR")
+        grand_total += amount
+        
+    print("─" * 36)
+    print(f"  {'KOPĀ:':<19} {grand_total:>10.2f} EUR")
+
+
+def ask_month_selection(months):
+    """
+    Parāda pieejamos mēnešus un prasa lietotājam izvēlēties vienu.
+    Atgriež izvēlēto mēnesi (string) vai None.
+    """
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    print("    Filtrēt pēc mēneša")
+    print("─" * 70)
+    print("\n")
+
+
+    if not months:
+        print("\n     ❌ Nav pieejamu datu par mēnešiem.")
+        return None
+
+    print("      Pieejamie mēneši")
+    print("─" * 30)
+    
+    for index, month in enumerate(months, start=1):
+        print(f"{index}) {month}")
+
+    try:
+        choice = int(input(f"\nIzvēlieties numuru (1-{len(months)}): "))
+        if 1 <= choice <= len(months):
+            return months[choice - 1]
+        else:
+            print("      ❌ Kļūda: Skaitlis nav sarakstā.")
+            return None
+    except ValueError:
+        print("      ❌ Kļūda: Lūdzu, ievadiet veselu skaitli!")
+        return None    
+    
+    
+def ask_expense_to_delete(expenses):
+    """
+    Parāda numurētu sarakstu un prasa lietotājam ievadīt numuru dzēšanai.
+    """
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    print("    Dzēst izdevumu")
+    print("─" * 70)
+    print("\n")
+
+    if not expenses:
+        print("\n     ❌ Nav izdevumu, ko dzēst.")
+        return None
+
+    # Izmantojam uzlaboto attēlošanas funkciju ar numuriem!
+    display_expenses(expenses, show_index=True)
+    
+    try:
+        choice = int(input("\nIevadiet ieraksta numuru, kuru vēlaties dzēst (vai 0, lai atceltu): "))
+        if choice == 0:
+            return None
+        if 1 <= choice <= len(expenses):
+            return choice - 1  # Atgriežam saraksta indeksu (par 1 mazāku)
+        else:
+            print("      ❌ Kļūda: Nepareizs numurs.")
+            return None
+    except ValueError:
+        print("      ❌ Kļūda: Jāievada vesels skaitlis!")
+        return None    

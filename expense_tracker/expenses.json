@@ -1,14 +1,254 @@
 [
     {
-        "date": "2026-05-12",
-        "amount": 2.5,
+        "date": "2026-03-01",
+        "amount": 225.4,
+        "category": "Komunālie maksājumi",
+        "description": "Apkure un siltais ūdens (februāris)"
+    },
+    {
+        "date": "2026-03-02",
+        "amount": 44.1,
+        "category": "Komunālie maksājumi",
+        "description": "Atkritumu izvešana un apsaimniekošana"
+    },
+    {
+        "date": "2026-03-04",
+        "amount": 78.5,
+        "category": "Ēdiens",
+        "description": "Pārtikas krājumu papildināšana (Rimi)"
+    },
+    {
+        "date": "2026-03-06",
+        "amount": 22.3,
+        "category": "Ēdiens",
+        "description": "Svaigi dārzeņi un augļi (Tirgus)"
+    },
+    {
+        "date": "2026-03-08",
+        "amount": 65.0,
         "category": "Transports",
-        "description": "Autobusa biļete"
+        "description": "Degviela (Neste)"
+    },
+    {
+        "date": "2026-03-10",
+        "amount": 18.0,
+        "category": "Transports",
+        "description": "Auto stāvvietas abonements"
+    },
+    {
+        "date": "2026-03-12",
+        "amount": 40.0,
+        "category": "Veselība",
+        "description": "Asins analīzes un laboratorija"
+    },
+    {
+        "date": "2026-03-14",
+        "amount": 15.6,
+        "category": "Veselība",
+        "description": "Bērna vitamīni (Aptieka)"
+    },
+    {
+        "date": "2026-03-15",
+        "amount": 48.0,
+        "category": "Izklaide",
+        "description": "Vakariņas ārpus mājas"
+    },
+    {
+        "date": "2026-03-17",
+        "amount": 32.0,
+        "category": "Izklaide",
+        "description": "Biļetes uz izstādi"
+    },
+    {
+        "date": "2026-03-20",
+        "amount": 135.0,
+        "category": "Iepirkšanās",
+        "description": "Pavasara apavi (Sportland)"
+    },
+    {
+        "date": "2026-03-22",
+        "amount": 74.99,
+        "category": "Iepirkšanās",
+        "description": "Sadzīves ķīmija un higiēna"
+    },
+    {
+        "date": "2026-03-25",
+        "amount": 30.0,
+        "category": "Cits",
+        "description": "Grāmatas iegāde"
+    },
+    {
+        "date": "2026-03-28",
+        "amount": 12.5,
+        "category": "Cits",
+        "description": "Telefona rēķins (Bite)"
+    },
+    {
+        "date": "2026-04-01",
+        "amount": 215.5,
+        "category": "Komunālie maksājumi",
+        "description": "Apkures un ūdens rēķins (marts)"
+    },
+    {
+        "date": "2026-04-02",
+        "amount": 42.15,
+        "category": "Komunālie maksājumi",
+        "description": "Elektrības rēķins (Tetr)"
+    },
+    {
+        "date": "2026-04-03",
+        "amount": 68.3,
+        "category": "Ēdiens",
+        "description": "Iepirkšanās Maxima visai nedēļai"
+    },
+    {
+        "date": "2026-04-05",
+        "amount": 12.4,
+        "category": "Ēdiens",
+        "description": "Pusdienas darbā (Daily)"
+    },
+    {
+        "date": "2026-04-07",
+        "amount": 75.0,
+        "category": "Transports",
+        "description": "Degvielas uzpilde (Circle K)"
+    },
+    {
+        "date": "2026-04-10",
+        "amount": 15.0,
+        "category": "Transports",
+        "description": "Vilciena biļetes uz Jūrmalu"
+    },
+    {
+        "date": "2026-04-12",
+        "amount": 45.0,
+        "category": "Veselība",
+        "description": "Acu ārsta vizīte"
+    },
+    {
+        "date": "2026-04-13",
+        "amount": 18.2,
+        "category": "Veselība",
+        "description": "Aptieka (pretalerģijas zāles)"
+    },
+    {
+        "date": "2026-04-15",
+        "amount": 35.0,
+        "category": "Izklaide",
+        "description": "Koncerta biļete"
+    },
+    {
+        "date": "2026-04-16",
+        "amount": 22.0,
+        "category": "Izklaide",
+        "description": "Boulinga spēle"
+    },
+    {
+        "date": "2026-04-18",
+        "amount": 120.0,
+        "category": "Iepirkšanās",
+        "description": "Pavasara virsjaka"
+    },
+    {
+        "date": "2026-04-22",
+        "amount": 85.6,
+        "category": "Iepirkšanās",
+        "description": "Saimniecības preces (Depo)"
+    },
+    {
+        "date": "2026-04-25",
+        "amount": 40.0,
+        "category": "Cits",
+        "description": "Dāvana dzimšanas dienā"
+    },
+    {
+        "date": "2026-05-01",
+        "amount": 165.4,
+        "category": "Komunālie maksājumi",
+        "description": "NĪN un apsaimniekošanas rēķins"
+    },
+    {
+        "date": "2026-05-02",
+        "amount": 48.9,
+        "category": "Komunālie maksājumi",
+        "description": "Internets un televīzija"
+    },
+    {
+        "date": "2026-05-03",
+        "amount": 72.15,
+        "category": "Ēdiens",
+        "description": "Lidl nedēļas pirkumi"
+    },
+    {
+        "date": "2026-05-05",
+        "amount": 18.5,
+        "category": "Ēdiens",
+        "description": "Pusdienas restorānā (biznesa pusdienas)"
+    },
+    {
+        "date": "2026-05-07",
+        "amount": 60.0,
+        "category": "Transports",
+        "description": "Degviela (Viada)"
+    },
+    {
+        "date": "2026-05-10",
+        "amount": 35.0,
+        "category": "Transports",
+        "description": "Auto mazgāšana un vaskošana"
     },
     {
         "date": "2026-05-12",
-        "amount": 49.67,
+        "amount": 85.0,
+        "category": "Veselība",
+        "description": "Fizioterapeita apmeklējums"
+    },
+    {
+        "date": "2026-05-14",
+        "amount": 12.3,
+        "category": "Veselība",
+        "description": "Aptieka (plāksteri un antiseptiķis)"
+    },
+    {
+        "date": "2026-05-16",
+        "amount": 55.0,
+        "category": "Izklaide",
+        "description": "Teātra izrādes apmeklējums"
+    },
+    {
+        "date": "2026-05-18",
+        "amount": 28.0,
+        "category": "Izklaide",
+        "description": "Ieejas biļetes botāniskajā dārzā"
+    },
+    {
+        "date": "2026-05-20",
+        "amount": 140.0,
+        "category": "Iepirkšanās",
+        "description": "Vasaras apavi (Ecco)"
+    },
+    {
+        "date": "2026-05-22",
+        "amount": 95.75,
+        "category": "Iepirkšanās",
+        "description": "Dārza instrumenti un sēklas"
+    },
+    {
+        "date": "2026-05-25",
+        "amount": 25.0,
+        "category": "Cits",
+        "description": "Dāvanu karte draugam"
+    },
+    {
+        "date": "2026-05-28",
+        "amount": 12.5,
+        "category": "Cits",
+        "description": "Spotify mēneša abonements"
+    },
+    {
+        "date": "2026-05-15",
+        "amount": 34.55,
         "category": "Ēdiens",
-        "description": "Rimi pārtika"
+        "description": "Rīmi pārtika"
     }
 ]

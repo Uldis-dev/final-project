@@ -27,7 +27,10 @@ def load_expenses(expenses_file="expenses.json"):
     
     try:
         with open(expenses_file, 'r', encoding='utf-8') as file:
-            return json.load(file)     #ielasa faila saturu atmiņā
+            raw_expenses = json.load(file)
+            # Uzreiz sakārtojam visus izdevumus pēc datuma hronoloģiskā secībā
+            sorted_expenses = sorted(raw_expenses, key=lambda x: x["date"])
+            return sorted_expenses  #ielasa faila saturu atmiņā
     except (json.JSONDecodeError, IOError):
         # Ja fails ir bojāts vai to nevar nolasīt, atgriežam tukšu sarakstu
         return []        

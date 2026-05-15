@@ -8,26 +8,99 @@ def sum_total(expenses):
         total += expense["amount"]
     return total
 
+def sum_by_category(expenses):
+    """
+    Sagatavo kopsavilkumu par izdevumiem katrā kategorijā.
+    Atgriež vārdnīcu, piemēram: {"Ēdiens": 25.0, "Transports": 3.4}
+    """
+    summary = {}
+    
+    for expense in expenses:
+        cat = expense["category"]
+        amount = expense["amount"]
+        
+        if cat in summary:
+            summary[cat] += amount
+        else:
+            summary[cat] = amount
+            
+    return summary
+
+def get_available_months(expenses):
+    """
+    Atrod visus unikālos mēnešus, kuros ir izdevumi.
+    Atgriež sakārtotu sarakstu formātā ['YYYY-MM', ...]
+    """
+    months = set()
+    for expense in expenses:
+        # Pieņemam, ka datums ir formātā "YYYY-MM-DD"
+        # Paņemam pirmos 7 simbolus (gads un mēnesis)
+        month = expense["date"][:7]
+        months.add(month)
+    
+    # Sakārtojam hronoloģiskā secībā
+    return sorted(list(months), reverse=True)
+
+def filter_by_month(expenses, month_str):
+    """
+    Atgriež sarakstu ar izdevumiem, kas veikti konkrētā mēnesī.
+    """
+    filtered_expenses = []
+    for expense in expenses:
+        if expense["date"].startswith(month_str):
+            filtered_expenses.append(expense)
+    return filtered_expenses
+
+def delete_expense(expenses, index):
+    """
+    Izdzēš izdevumu no saraksta pēc norādītā indeksa.
+    Atgriež True, ja izdzēsts, un False, ja nē.
+    """
+    try:
+        if 0 <= index < len(expenses):
+            removed = expenses.pop(index)
+            print(f"Izdzēsts: {removed['description']} ({removed['amount']} EUR)")
+            return True
+        return False
+    except (IndexError, TypeError):
+        return False
 
 if __name__ == "__main__":
     # 1. Izveidojam testa datus (sarakstu ar vārdnīcām)
     test_expenses = [
         {"date": "2024-05-01", "amount": 10.00, "category": "Ēdiens", "description": "Picas"},
         {"date": "2024-05-02", "amount": 25.50, "category": "Transports", "description": "Degviela"},
-        {"date": "2024-05-03", "amount": 5.00, "category": "Izklaide", "description": "Kino"}
+        {"date": "2024-05-03", "amount": 5.00, "category": "Izklaide", "description": "Kino"},
+        {"date": "2024-05-04", "amount": 15.00, "category": "Ēdiens", "description": "Pusdienas"}
     ]
 
-    # 2. Izsaucam funkciju un saglabājam rezultātu
+    # 2. Izsaucam summēšanas funkciju un saglabājam rezultātu
     result = sum_total(test_expenses)
 
-    # 3. Izvadām rezultātu pārbaudei
+    # 3. Izvadām summēsanas funkcijas rezultātu
     print("--- Pašpārbaudes tests funkcijai sum_total ---")
-    print(f"Testa dati: 10.00 + 25.50 + 5.00")
-    print(f"Gaidāmais rezultāts: 40.5")
+    print(f"Testa dati: 10.00 + 25.50 + 5.00 + 15.00")
+    print(f"Gaidāmais rezultāts: 55.5")
     print(f"Faktiskais rezultāts: {result}")
 
-    # 4. Automātiska pārbaude (pēc izvēles)
-    if result == 40.5:
+    # 4. summēšanas rezultāta pārbaude
+    if result == 55.5:
         print("✅ Tests veiksmīgs!")
     else:
         print("❌ Tests neizdevās. Pārbaudiet funkcijas loģiku.")
+
+    # 5. Izsaucam summēšanas pa kategorijām funkciju un saglabājam rezultātu
+    category_result = sum_by_category(test_expenses)
+    # Gaidāmie rezultāti: Ēdiens (10+15=25), Transports (25.5), Izklaide (5)
+    expected_categories = {"Ēdiens": 25.00, "Transports": 25.50, "Izklaide": 5.00}
+
+    # 6. Izvadām summēsanas pa kategorijām funkcijas rezultātu
+    print(f"\nFunkcija: sum_by_category")
+    print(f"Gaidāmais: {expected_categories}")
+    print(f"Faktiskais: {category_result}")
+
+    # 7. summēšanas pa kategorijām rezultāta pārbaude
+    if category_result == expected_categories:
+        print("✅ sum_by_category tests veiksmīgs!")
+    else:
+        print("❌ sum_by_category tests neizdevās!")        
