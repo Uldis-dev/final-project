@@ -26,6 +26,31 @@ def sum_by_category(expenses):
             
     return summary
 
+def get_available_months(expenses):
+    """
+    Atrod visus unikālos mēnešus, kuros ir izdevumi.
+    Atgriež sakārtotu sarakstu formātā ['YYYY-MM', ...]
+    """
+    months = set()
+    for expense in expenses:
+        # Pieņemam, ka datums ir formātā "YYYY-MM-DD"
+        # Paņemam pirmos 7 simbolus (gads un mēnesis)
+        month = expense["date"][:7]
+        months.add(month)
+    
+    # Sakārtojam hronoloģiskā secībā
+    return sorted(list(months))
+
+def filter_by_month(expenses, month_str):
+    """
+    Atgriež sarakstu ar izdevumiem, kas veikti konkrētā mēnesī.
+    """
+    filtered_expenses = []
+    for expense in expenses:
+        if expense["date"].startswith(month_str):
+            filtered_expenses.append(expense)
+    return filtered_expenses
+
 if __name__ == "__main__":
     # 1. Izveidojam testa datus (sarakstu ar vārdnīcām)
     test_expenses = [
