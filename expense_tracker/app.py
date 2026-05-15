@@ -1,6 +1,6 @@
 from storage import load_expenses, save_expenses
-from logic import sum_total, sum_by_category, get_available_months, filter_by_month
-from ui import wait_for_user, show_menu, get_new_expense, display_expenses, display_category_expenses, ask_month_selection, clear_screen
+from logic import sum_total, sum_by_category, get_available_months, filter_by_month, delete_expense
+from ui import wait_for_user, show_menu, get_new_expense, display_expenses, display_category_expenses, ask_month_selection, clear_screen, ask_expense_to_delete
 
 CATEGORIES = ["Ēdiens", "Transports", "Izklaide",
     "Komunālie maksājumi", "Veselība", "Iepirkšanās", "Cits"]
@@ -25,18 +25,11 @@ def main():
             wait_for_user()    
 
         if choice == "3":   # Filtrēt pēc mēneša
-            # 1. Loģikas modulis atrod pieejamos mēnešus
             available_months = get_available_months(expenses)
-            
-            # 2. UI modulis nodarbojas ar parādīšanu un izvēli
             selected_month = ask_month_selection(available_months)
             
             if selected_month:
-                # 3. Loģikas modulis nofiltrē datus
                 filtered_data = filter_by_month(expenses, selected_month)
-                
-                # 4. UI modulis parāda rezultātus
-                print(f"--- Izdevumi mēnesī: {selected_month} ---")
                 display_expenses(filtered_data, selected_month)
                 wait_for_user()            
 
@@ -47,6 +40,21 @@ def main():
             # 2. Nododam rezultātu UI modulim attēlošanai
             display_category_expenses(summary_data)
             wait_for_user()
+
+        if choice == "5":   # Dzēst izdevumu   
+            # 1. Pajautājam lietotājam, kuru dzēst (caur UI)
+            index_to_delete = ask_expense_to_delete(expenses)
+            
+            if index_to_delete is not None:
+                # 2. Veicam dzēšanu loģikas modulī
+                success = delete_expense(expenses, index_to_delete)
+                
+                if success:
+                    # 3. SAGLABĀJAM izmaiņas failā!
+                    save_expenses(expenses) 
+                    print("Saraksts atjaunināts un saglabāts.")
+            
+            wait_for_user()                    
 
         elif choice == "7": # Iziet
             clear_screen()
