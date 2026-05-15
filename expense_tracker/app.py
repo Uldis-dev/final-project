@@ -1,24 +1,16 @@
 from storage import load_expenses, save_expenses
-from logic import sum_total
-from ui import get_new_expense, display_expenses
+from logic import sum_total, sum_by_category
+from ui import wait_for_user, show_menu, get_new_expense, display_expenses, display_category_expenses
 
 CATEGORIES = ["Ēdiens", "Transports", "Izklaide",
     "Komunālie maksājumi", "Veselība", "Iepirkšanās", "Cits"]
-
-def show_menu():
-    """Parāda galveno izvēlni un atgriež lietotāja izvēli."""
-    print("\n1) Pievienot izdevumu")
-    print("2) Parādīt izdevumus")
-    print("7) Iziet")
-    # ... pārējās komandas ...
-    return input("\nIzvēlies darbību (1-7): ")
 
 def main():
     """Galvenā programmas cilpa/cikls."""
     expenses = load_expenses()
     while True:
         choice = show_menu()
-        if choice == "1":
+        if choice == "1":   # Pievienot izdevumu
             # 2. Iegūstam jauno izdevumu no ui.py
             new_expense = get_new_expense(CATEGORIES)
 
@@ -26,11 +18,21 @@ def main():
             if new_expense:
                 expenses.append(new_expense) # Pievienojam sarakstam atmiņā
                 save_expenses(expenses)      # SAGLABĀJAM JSON failā uzreiz
-                print("Izdevums veiksmīgi saglabāts!")
+                print("✅  Izdevums veiksmīgi saglabāts!")
 
-        if choice == "2":
-            display_expenses(expenses)         
-        elif choice == "7":
+        if choice == "2":   # Parādīt izdevumus
+            display_expenses(expenses)  
+            wait_for_user()    
+
+        if choice == "4":   # Kopsavilkums pa kategorijām
+            # 1. Veicam aprēķinus, izmantojot loģikas moduli
+            summary_data = sum_by_category(expenses)
+    
+            # 2. Nododam rezultātu UI modulim attēlošanai
+            display_category_expenses(summary_data)
+            wait_for_user()
+
+        elif choice == "7": # Iziet
             print("Uz redzēšanos!")
             break
 
