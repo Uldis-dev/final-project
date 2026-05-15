@@ -1,5 +1,45 @@
 from logic import sum_total
 from datetime import datetime
+import os
+
+def clear_screen():
+    """
+    Notīra termināla ekrānu atkarībā no operētājsistēmas.
+    """
+    # Windows sistēmā os.name ir 'nt', macOS/Linux tā ir 'posix'
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
+
+def wait_for_user():
+    """
+    Aptur programmas darbību, līdz lietotājs nospiež Enter.
+    """
+    print("\n" * 3)
+    print("─" * 70)
+    input("Nospiediet [Enter], lai atgrieztos izvēlnē...")        
+
+def show_menu():
+    """Parāda galveno izvēlni un atgriež lietotāja izvēli."""
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    print("    Galvenā izvēlne")      
+    print("─" * 70)
+
+
+    print("\n1) Pievienot izdevumu")
+    print("2) Parādīt izdevumus")
+    print("3) Filtrēt pēc mēneša")    
+    print("4) Kopsavilkums pa kategorijām")
+    print("5) Dzēst izdevumu")    
+    print("6) Eksportēt CSV")            
+    print("7) Iziet")
+
+    return input("\nIzvēlies darbību (1-7): ")
 
 def get_new_expense(categories):
     """
@@ -7,10 +47,18 @@ def get_new_expense(categories):
     """
     # 1. Iegūstam šodienas datumu kā tekstu pareizā formātā
     today_str = datetime.now().strftime("%Y-%m-%d")
+    
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    print("    Pievienot jaunu izdevumu")
+    print("─" * 70)
+    print("\n")
 
-    print("\n--- PIEVIENOT JAUNU IZDEVUMU ---")
     try:
-        date_input = input(f"Datums (YYYY-MM-DD) [{today_str}]: ")
+        date_input = input(f"Datums (YYYY-MM-DD), atstājot tukšu, tiks paņemts šodienas datums ({today_str}): ")
         if date_input == "":    #ja lietotājs neievada datumu, tiek paņemts šodienas datums
             date = today_str
         else:
@@ -27,7 +75,7 @@ def get_new_expense(categories):
             # No numura (piem. 1) iegūstam nosaukumu (indekss 0)
             category_name = categories[category_nr_input - 1]
         else:
-            print("Kļūda: Nepareizs kategorijas numurs!")
+            print("❌ Kļūda: Nepareizs kategorijas numurs!")
             return None
 
         amount = float(input("Summa (EUR): "))
@@ -40,28 +88,68 @@ def get_new_expense(categories):
             "description": description
         }
     except ValueError:
-        print("Kļūda: Summai jābūt skaitlim!")
+        print("❌ Kļūda: Summai jābūt skaitlim!")
         return None
     
 
 def display_expenses(expenses):
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    print("    Izdevumu saraksts")
+    print("─" * 70)
+
     if not expenses:
         print("\nSaraksts ir tukšs!")
         return
 
-    print(f"\n{'Datums':<12} {'Summa':>10} {'Kategorija':<15} {'Apraksts'}")
-    print("-" * 60)
+    print(f"\n{'Datums':<18} {'Summa':<8} {'Kategorija':<15} {'Apraksts':<33}")
+    print("─" * 70)
     
     for exp in expenses:
         # Pievienojam EUR simbolu un noformatējam decimāldaļas
-        amount_str = f"{exp['amount']:>7.2f} EUR"
-        print(f"{exp['date']:<12} {amount_str} {exp['category']:<15} {exp['description']}")
+        amount_str = f"{exp['amount']:.2f}"
+        print(f"{exp['date']:<12} {amount_str:>10} EUR {exp['category']:<15} {exp['description']:<33}")
     
-    print("-" * 60)
+    print("─" * 70)
 
     # Šeit pievienojam kopsummas aprēķinu un izvadi
     total = sum_total(expenses)
     count = len(expenses)
     
-    print(f"Kopā: {total:>9.2f} EUR ({count} ieraksti)")
-    print("-" * 60)    
+    print(f"  {'KOPĀ:':<10} {total:>10.2f} EUR ({count} ieraksti)")
+    print("─" * 70)    
+
+
+def display_category_expenses(summary):
+    """
+    Attēlo kopsavilkumu pa kategorijām glītā formātā.
+    """
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    print("    Kopsavilkums pa kategorijām")
+    print("─" * 70)
+
+    if not summary:
+        print("\nNav datu kopsavilkuma izveidei.")
+        return
+
+    print(f"\n{'Kategorija':<22} {'Summa':<10}")
+    print("─" * 31)
+
+    grand_total = 0
+    
+    # Ejam cauri vārdnīcas elementiem (atslēga, vērtība)
+    for category, amount in summary.items():
+        # :<15 norāda, ka tekstam jāaizņem 15 zīmes, līdzinot pa kreisi
+        # :>10.2f norāda 10 zīmes, līdzinot pa labi, ar 2 cipariem aiz komata
+        print(f"{category:<16} {amount:>10.2f} EUR")
+        grand_total += amount
+        
+    print("─" * 31)
+    print(f"  {'KOPĀ:':<14} {grand_total:>10.2f} EUR")
