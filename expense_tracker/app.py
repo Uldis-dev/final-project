@@ -1,6 +1,7 @@
 from storage import load_expenses, save_expenses
 from logic import sum_total, sum_by_category, get_available_months, filter_by_month, delete_expense
-from ui import wait_for_user, show_menu, get_new_expense, display_expenses, display_category_expenses, ask_month_selection, clear_screen, ask_expense_to_delete
+from ui import wait_for_user, show_menu, get_new_expense, display_expenses, display_category_expenses, ask_month_selection, clear_screen, ask_expense_to_delete, show_export_status
+from export import export_to_csv
 
 CATEGORIES = ["Ēdiens", "Transports", "Izklaide",
     "Komunālie maksājumi", "Veselība", "Iepirkšanās", "Cits"]
@@ -34,27 +35,28 @@ def main():
                 wait_for_user()            
 
         if choice == "4":   # Kopsavilkums pa kategorijām
-            # 1. Veicam aprēķinus, izmantojot loģikas moduli
             summary_data = sum_by_category(expenses)
     
-            # 2. Nododam rezultātu UI modulim attēlošanai
             display_category_expenses(summary_data)
             wait_for_user()
 
         if choice == "5":   # Dzēst izdevumu   
-            # 1. Pajautājam lietotājam, kuru dzēst (caur UI)
             index_to_delete = ask_expense_to_delete(expenses)
             
             if index_to_delete is not None:
-                # 2. Veicam dzēšanu loģikas modulī
                 success = delete_expense(expenses, index_to_delete)
                 
                 if success:
-                    # 3. SAGLABĀJAM izmaiņas failā!
                     save_expenses(expenses) 
                     print("Saraksts atjaunināts un saglabāts.")
             
-            wait_for_user()                    
+            wait_for_user()        
+        
+        if choice == "6":   # Eksportēt CSV
+            filename = "izdevumi_eksports.csv"
+            success = export_to_csv(expenses, filename)
+            show_export_status(success, filename)
+            wait_for_user()    
 
         elif choice == "7": # Iziet
             clear_screen()
