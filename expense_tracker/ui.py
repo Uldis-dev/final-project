@@ -251,4 +251,18 @@ def ask_expense_to_delete(expenses):
             return None
     except ValueError:
         print("      ❌ Kļūda: Jāievada vesels skaitlis!")
-        return None    
+        return None
+    
+def show_export_status(success, filename):
+    clear_screen()
+    print("\n")
+    print("=" * 70)
+    print("  IZDEVUMU IZSEKOTĀJS")
+    print("=" * 70)
+    print("    Eksportēt CSV")
+    print("─" * 70)
+    print("\n")
+    if success:
+        print(f"\n      ✅ Dati veiksmīgi eksportēti uz failu: {filename}")
+    else:
+        print("\n      ❌ Kļūda: Eksports neizdevās. Saraksts ir tukšs.")    
