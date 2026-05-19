@@ -200,6 +200,7 @@ def ask_month_selection(months):
 
     if not months:
         print("\n     ❌ Nav pieejamu datu par mēnešiem.")
+        wait_for_user() 
         return None
 
     print("      Pieejamie mēneši")
