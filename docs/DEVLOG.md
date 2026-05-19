@@ -88,3 +88,100 @@ export_to_csv(expenses)
 `ui.py` pievienoju eksporta statusa attēlošanu.
 
 Noslēgumā izveidoju `README.md`. Pirmajā variantā tas GitHub izskatījās nepārskatāms, tāpēc vēlāk pārveidoju struktūru un noformējumu.
+
+
+## 6. solis — noslēguma etaps: robežgadījumi un validācijas
+
+Pēdējā etapā pārbaudīju robežgadījumus un uzlaboju lietotāja ievades validāciju.
+
+---
+
+### JSON fails ir bojāts
+
+Sākumā programma bojātu `expenses.json` failu vienkārši pārrakstīja ar jaunu tukšu failu, kas varēja izraisīt datu zudumu.
+
+Pārtaisīju loģiku — tagad bojātais fails tiek pārsaukts uz:
+
+```text
+expenses_CORRUPTED.json.bak
+```
+
+un programma izveido jaunu tukšu `expenses.json`.
+
+Lietotājam tiek parādīts kļūdas paziņojums par bojāto failu.
+
+---
+
+### Filtrēšana bez datiem
+
+Ja nav pieejamu mēnešu filtrēšanai, `ui.py` pievienoju:
+
+```python
+wait_for_user()
+```
+
+lai lietotājs paspētu izlasīt paziņojumu:
+
+```text
+Nav pieejamu datu par mēnešiem.
+```
+
+---
+
+### Izdevumu pievienošanas validācija
+
+Izveidoju jaunu moduli:
+
+```text
+validators.py
+```
+
+kurā ievietoju validācijas funkcijas.
+
+---
+
+#### Datuma validācija
+
+Pievienoju:
+
+```python
+is_valid_date()
+```
+
+un ciklu, kas atkārtoti pieprasa datumu, līdz tiek ievadīts pareizs formāts.
+
+---
+
+#### Kategorijas validācija
+
+Iepriekš nepareiza kategorijas ievade pārtrauca pievienošanas procesu un atgrieza lietotāju izvēlnē.
+
+Pievienoju:
+
+```python
+validators.is_valid_category()
+```
+
+un atkārtotu ievades pārbaudi.
+
+---
+
+#### Summas validācija
+
+Līdzīgi bija ar summu — nepareiza ievade pārtrauca procesu.
+
+Pievienoju:
+
+```python
+validators.is_valid_amount()
+```
+
+un ciklu korektai atkārtotai ievadei.
+
+---
+
+### Filtrēšana pēc mēneša
+
+Ja lietotājs ievadīja negatīvu skaitli, pārāk lielu numuru, tukšumu vai tekstu, programma uzreiz atgriezās galvenajā izvēlnē.
+
+Pievienoju ievades validāciju un atkārtotu pieprasījumu ievadīt pareizu mēneša numuru.

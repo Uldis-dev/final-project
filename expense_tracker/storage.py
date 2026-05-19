@@ -33,7 +33,7 @@ def load_expenses(expenses_file="expenses.json"):
             return sorted_expenses  #ielasa faila saturu atmiņā
     except (json.JSONDecodeError, IOError):
         # Ja fails ir bojāts vai to nevar nolasīt, atgriežam tukšu sarakstu
-        return []        
+        return "CORRUPTED"        
         
 
 def save_expenses(expenses, expenses_file="expenses.json"):

@@ -1,5 +1,6 @@
 from logic import sum_total
 from datetime import datetime
+from validators import is_valid_date, is_valid_category, is_valid_amount, is_valid_month_choice
 import os
 
 def clear_screen():
@@ -58,28 +59,51 @@ def get_new_expense(categories):
     print("\n")
 
     try:
-        date_input = input(f"Datums (YYYY-MM-DD), atstājot tukšu, tiks paņemts šodienas datums ({today_str}): ")
-        if date_input == "":    #ja lietotājs neievada datumu, tiek paņemts šodienas datums
-            date = today_str
-        else:
-            date = date_input
-        
+        while True:
+            date_input = input(f"Datums (YYYY-MM-DD), atstājot tukšu, tiks paņemts šodienas datums ({today_str}): ")
+            if date_input == "":    #ja lietotājs neievada datumu, tiek paņemts šodienas datums
+                date = today_str
+                break
+            if is_valid_date(date_input):
+                date = date_input
+                break
+            else:
+                print("      ❌ Kļūda: Nepareizs datuma formāts!")
+
         print("Kategorija: ", end="")
         for index, category in enumerate(categories, start=1):
             print(f"{index}) {category} ", end="")
-        print()
-        #category = input("Izvēlies (1-7): ")
-        category_nr_input = int(input(f"Izvēlies numuru (1-{len(categories)}): "))
+        print()       
+        while True:
+            category_nr_input = input(f"Izvēlies numuru (1-{len(categories)}): ").strip()
 
-        if 1 <= category_nr_input <= len(categories):
-            # No numura (piem. 1) iegūstam nosaukumu (indekss 0)
-            category_name = categories[category_nr_input - 1]
-        else:
-            print("      ❌ Kļūda: Nepareizs kategorijas numurs!")
-            return None
+            if is_valid_category(category_nr_input, len(categories)):
+                category_name = categories[int(category_nr_input) - 1]
+                break
+            else:
+                print("      ❌ Kļūda: Nepareiza izvēle! Lūdzu, ievadiet ciparu no norādītā diapazona.")
 
-        amount = float(input("Summa (EUR): "))
-        description = input("Apraksts: ")
+        while True:
+            amount_input = input("Summa (EUR): ")
+    
+            # Izsaucam funkciju no validators.py, kas atgriezīs float vai None
+            validated_amount = is_valid_amount(amount_input)
+    
+            if validated_amount is not None:
+                amount = validated_amount
+                break
+            else:
+                print("      ❌ Kļūda: Nepareizs summas formāts! Ievadiet pozitīvu skaitli (piem. 15.45).")
+
+        while True:
+            # Saņemam ievadi un uzreiz noņemam tukšās atstarpes no sākuma un beigās
+            description = input("Apraksts: ").strip()
+
+            # 2. Pārbaudām, vai pēc atstarpju noņemšanas teksts nav palicis tukšs
+            if description != "":
+                break  # Ievade ir veiksmīga, pārtraucam ciklu
+            else:
+                print("      ❌ Kļūda: Apraksts nevar būt tukšs! Lūdzu, īsi aprakstiet izdevumu.")
 
         return {
             "date": date,
@@ -88,7 +112,7 @@ def get_new_expense(categories):
             "description": description
         }
     except ValueError:
-        print("      ❌ Kļūda: Summai jābūt skaitlim!")
+        print("      ❌ Kļūda: Nepareiza ievade! Lūdzu, ievadiet datus pareizā formātā.")
         return None
     
 
@@ -200,6 +224,7 @@ def ask_month_selection(months):
 
     if not months:
         print("\n     ❌ Nav pieejamu datu par mēnešiem.")
+        wait_for_user() 
         return None
 
     print("      Pieejamie mēneši")
@@ -208,16 +233,16 @@ def ask_month_selection(months):
     for index, month in enumerate(months, start=1):
         print(f"{index}) {month}")
 
-    try:
-        choice = int(input(f"\nIzvēlieties numuru (1-{len(months)}): "))
-        if 1 <= choice <= len(months):
-            return months[choice - 1]
+    while True:
+        choice = input(f"\nIzvēlieties numuru (1-{len(months)}): ").strip()
+        if is_valid_month_choice(choice, len(months)):
+            choice = int(choice)
+            selected_month = months[choice - 1]
+            break # Ievade ir veiksmīga, pārtraucam ciklu
         else:
-            print("      ❌ Kļūda: Skaitlis nav sarakstā.")
-            return None
-    except ValueError:
-        print("      ❌ Kļūda: Lūdzu, ievadiet veselu skaitli!")
-        return None    
+            print(f"      ❌ Kļūda: Lūdzu, ievadiet veselu skaitli no 1 līdz {len(months)}!")
+    
+    return selected_month
     
     
 def ask_expense_to_delete(expenses):
