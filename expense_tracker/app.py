@@ -1,3 +1,5 @@
+import os
+
 from storage import load_expenses, save_expenses
 from logic import sum_total, sum_by_category, get_available_months, filter_by_month, delete_expense
 from ui import wait_for_user, show_menu, get_new_expense, display_expenses, display_category_expenses, ask_month_selection, clear_screen, ask_expense_to_delete, show_export_status
@@ -9,6 +11,20 @@ CATEGORIES = ["Ēdiens", "Transports", "Izklaide",
 def main():
     """Galvenā programmas cilpa/cikls."""
     expenses = load_expenses()
+
+    if expenses == "CORRUPTED":
+        print("\n" + "─" * 30)
+        os.rename("expenses.json", "expenses_CORRUPTED.json.bak")
+        print("KĻŪDA: Fails 'expenses.json' ir bojāts un to nevar nolasīt!")
+        print("Lai nezaudētu datus, bojātais fails pārsaukts par 'expenses_CORRUPTED.json.bak'.")
+        print("Programma turpinās darbu, ar jaunu tukšu izdevumu sarakstu expenses.json")
+        print("─" * 30)
+
+        
+
+        expenses = [] # Tagad droši varam sākt no jauna        
+        wait_for_user()
+
     while True:
         choice = show_menu()
         if choice == "1":   # Pievienot izdevumu
